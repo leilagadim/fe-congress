@@ -7,22 +7,29 @@ function Questions() {
   const [newQuestion, setNewQuestion] = useState({
     questionText: "",
     options: [],
-    correctAnswer: ""
+    correctAnswer: "",
   });
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/questions`)
-      .then(res => setQuestions(res.data))
-      .catch(err => console.error(err));
+    axios
+      .get(`${import.meta.env.VITE_BASE_URL}/api/questions`)
+      .then((res) => setQuestions(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(`${import.meta.env.VITE_BASE_URL}/api/questions`, newQuestion);
+    await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/questions`,
+      newQuestion
+    );
     setNewQuestion({ questionText: "", options: [], correctAnswer: "" });
-    const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/questions`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/api/questions`
+    );
     setQuestions(res.data);
   };
+  if (!questions) return null;
 
   return (
     <div className="p-6">
@@ -33,35 +40,46 @@ function Questions() {
           type="text"
           placeholder="Sual mətni"
           value={newQuestion.questionText}
-          onChange={(e) => setNewQuestion({ ...newQuestion, questionText: e.target.value })}
+          onChange={(e) =>
+            setNewQuestion({ ...newQuestion, questionText: e.target.value })
+          }
         />
         <TextArea
           type="text"
           placeholder="Variantlar (vergüllə ayır)"
-          onChange={(e) => setNewQuestion({ ...newQuestion, options: e.target.value.split("}") })}
+          onChange={(e) =>
+            setNewQuestion({
+              ...newQuestion,
+              options: e.target.value.split("}"),
+            })
+          }
         />
         <TextArea
           type="text"
           placeholder="Düzgün cavab"
           value={newQuestion.correctAnswer}
-          onChange={(e) => setNewQuestion({ ...newQuestion, correctAnswer: e.target.value })}
+          onChange={(e) =>
+            setNewQuestion({ ...newQuestion, correctAnswer: e.target.value })
+          }
         />
         <button type="submit">Əlavə et</button>
       </form>
 
       <hr />
 
-      {questions?.map((q, i) => (
-        <div key={i} className="border p-4 my-3 rounded">
-          <h2>{q.questionText}</h2>
-          <ul>
-            {q.options?.map((opt, j) => (
-              <li key={j}>{opt}</li>
-            ))}
-          </ul>
-          <p>✅ Düzgün cavab: {q.correctAnswer}</p>
-        </div>
-      ))}
+      {Array.isArray(questions) && Boolean(questions?.length)
+        ? questions.map((q, i) => (
+            <div key={i} className="border p-4 my-3 rounded">
+              <h2>{q.questionText}</h2>
+              <ul>
+                {q.options.map((opt, j) => (
+                  <li key={j}>{opt}</li>
+                ))}
+              </ul>
+              <p>✅ Düzgün cavab: {q.correctAnswer}</p>
+            </div>
+          ))
+        : null}
     </div>
   );
 }

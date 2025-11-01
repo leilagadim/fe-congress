@@ -24,15 +24,17 @@ const App = () => {
       setUrl(`${url}/?id=${userId}`);
     }
   }, [userId]);
+
+  if(!users) return null
   return (
     <>
       <Select
         onChange={handleChange}
         style={{ width: "100%" }}
-        options={users?.map((user) => ({
+        options={Array.isArray(users) && Boolean(users?.length) ? users.map((user) => ({
           value: user._id,
           label: `${user.name} ${user.surname}`,
-        }))}
+        })): []}
       />
 
       <Space direction="vertical" align="center">

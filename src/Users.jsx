@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { Select } from 'antd';
+import { Select } from "antd";
 import axios from "axios";
-const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
 function Users() {
   const [questions, setQuestions] = useState([]);
-  const [users, setUsers] = useState([]);
-    const [selectedItems, setSelectedItems] = useState([]);
-     const filteredOptions = OPTIONS.filter(o => !selectedItems.includes(o));
+  const [selectedItems, setSelectedItems] = useState([]);
   const [newUser, setNewUser] = useState({
     name: "",
     surname: "",
@@ -33,7 +30,10 @@ function Users() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users`, {...newUser, questions:selectedItems});
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users`, {
+        ...newUser,
+        questions: selectedItems,
+      });
       setNewUser({ name: "", surname: "", questions: [] });
       const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users`);
       setUsers(res.data);
@@ -41,16 +41,9 @@ function Users() {
       console.error(err);
     }
   };
-  console.log({selectedItems})
+  console.log({ selectedItems });
 
-  // Multi-select handle
-  const handleQuestionsChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions)?.map(
-      (opt) => opt.value
-    );
-    setNewUser({ ...newUser, questions: selectedOptions });
-  };
-
+  if (!questions) return null;
   return (
     <div className="p-6">
       <h1>🧠 Userlər</h1>
@@ -78,7 +71,7 @@ function Users() {
           value={selectedItems}
           onChange={setSelectedItems}
           style={{ width: "100%" }}
-          options={questions?.map((item) => ({
+          options={questions.map((item) => ({
             value: item._id,
             label: item.questionText,
           }))}
