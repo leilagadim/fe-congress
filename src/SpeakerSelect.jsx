@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Input, QRCode, Space, Select } from "antd";
 
-const redirectUrl = "http://localhost:5173/speaker-questions";
+const redirectUrl = `${import.meta.env.VITE_BASE_URL}/speaker-questions`;
 const App = () => {
   const [userId, setUserId] = React.useState(null);
   const [url, setUrl] = React.useState(redirectUrl);
   const [users, setUsers] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/users")
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
       .then((res) => setUsers(res.data))
       .catch((err) => console.error(err));
   }, []);
