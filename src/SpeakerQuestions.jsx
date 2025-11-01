@@ -3,30 +3,21 @@ import { Button, Input, Radio } from "antd";
 import axios from "axios";
 import { Avatar, List } from "antd";
 import { useLocation } from "react-router-dom";
+import Loader from "./components/Loader";
 const style = {
   display: "flex",
   flexDirection: "column",
   gap: 8,
 };
 
-const data = [
-  {
-    title: "Ant Design Title 1",
-  },
-  {
-    title: "Ant Design Title 2",
-  },
-  {
-    title: "Ant Design Title 3",
-  },
-  {
-    title: "Ant Design Title 4",
-  },
-];
+
 const SpeakerQuestions = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [user, setUser] = useState(null);
+
   const [isVisible, setShowResult] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
 
   const location = useLocation();
@@ -34,6 +25,7 @@ const SpeakerQuestions = () => {
   const userId = queryParams.get("id");
 
   useEffect(() => {
+    console.log("nece defe girir");
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/questions`)
       .then((res) => setQuestions(res.data))
@@ -41,23 +33,26 @@ const SpeakerQuestions = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/users`)
-      .then((res) => {
-        const foundedUser = res?.data?.find((user) => user?._id === userId);
-
-        const responseQuestions = questions.filter((q) =>
-          foundedUser.questions.includes(q._id)
-        );
-        setFilteredQuestions(responseQuestions);
-        setAnsweredQuestions(
-          responseQuestions.map((question) => ({
-            questionId: question._id,
-            answer: "",
-          }))
-        );
-      })
-      .catch((err) => console.error(err));
+    if (questions?.length) {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/api/users`)
+        .then((res) => {
+          const foundedUser = res?.data?.find((user) => user?._id === userId);
+          setUser(foundedUser);
+          const responseQuestions = questions.filter((q) =>
+            foundedUser.questions.includes(q._id)
+          );
+          setFilteredQuestions(responseQuestions);
+          setAnsweredQuestions(
+            responseQuestions.map((question) => ({
+              questionId: question._id,
+              answer: "",
+            }))
+          );
+          setLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
   }, [questions]);
 
   const onChange = (e, correctAnswer, questionId) => {
@@ -92,11 +87,12 @@ const SpeakerQuestions = () => {
       `${import.meta.env.VITE_API_URL}/api/answeredQuestions/stats`
     );
 
-    console.log({res})
+    console.log({ res });
   };
-  return (
 
-    
+  if (loading) return <Loader />;
+
+  return (
     <div
       style={{
         width: "100%",
@@ -104,6 +100,7 @@ const SpeakerQuestions = () => {
     >
       <List
         itemLayout="horizontal"
+        loading={loading && Boolean(filteredQuestions?.length)}
         dataSource={filteredQuestions}
         renderItem={(item, index) => (
           <List.Item
@@ -118,8 +115,8 @@ const SpeakerQuestions = () => {
               }}
               avatar={
                 <Avatar
-                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-                />
+                  style={{ backgroundColor: "#f56a00" }}
+                >{`${user?.name?.[0]} ${user?.surname?.[0]}`}</Avatar>
               }
               title={<a href="https://ant.design">{item.title}</a>}
               description={item.questionText}
@@ -154,7 +151,7 @@ const SpeakerQuestions = () => {
       />
 
       <Button
-        disabled={answeredQuestions.some((a) => a.answer === "")}
+        disabled={loading || answeredQuestions.some((a) => a.answer === "")}
         type="primary"
         onClick={showResult}
       >

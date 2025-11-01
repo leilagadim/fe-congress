@@ -1,8 +1,16 @@
-
+/* Tam ekran fon şəkli */
 #root {
+  padding-top: 100px;
   width: 100%;
+  height: 100vh;
+  background-image: url("banner.png"); /* şəkli public qovluğuna qoy */
+  background-size: cover; /* şəkil ekranı tam örtür */
+  background-position: center; /* şəkil ortalanır */
+  background-repeat: no-repeat; /* təkrarlanmır */
+  display: flex; /* ortalama üçün kömək edəcək */
+  align-items: center; /* dikey ortalama */
+  justify-content: center; /* üfüqi ortalama */
 }
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

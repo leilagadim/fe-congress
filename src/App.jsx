@@ -8,18 +8,18 @@
   function App() {
     return (
       <Router>
-        <nav>
+        {/* <nav>
           <Link to="/">Home</Link> | 
           <Link to="/users">Users</Link> |
           <Link to="/speaker-select">Spikeri seçin</Link> |
           <Link to="/speaker-questions">Spiker Sualları</Link>
           <Link to={`/speaker-questions`}>Spiker Sualları</Link>
-        </nav>
+        </nav> */}
 
         <Routes>
-          <Route path="/" element={<Questions />} />
+          <Route path="/" element={<SpeakerSelect />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/speaker-select" element={<SpeakerSelect />} />
+          <Route path="/questions" element={<Questions />} />
           <Route path="/speaker-questions" element={<SpeakerQuestions />} />
         </Routes>
       </Router>

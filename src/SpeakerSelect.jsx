@@ -1,47 +1,135 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Input, QRCode, Space, Select } from "antd";
+import Loader from "./components/Loader";
+import { Input, QRCode, Space, Select, Modal, Button, Progress } from "antd";
 
 const redirectUrl = `${import.meta.env.VITE_BASE_URL}/speaker-questions`;
-const App = () => {
+const SpeakerSelect = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = React.useState(null);
-  const [url, setUrl] = React.useState(redirectUrl);
+  const [url, setUrl] = React.useState(null);
   const [users, setUsers] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState([]);
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/users`)
-      .then((res) => setUsers(res.data))
+      .then((res) => {
+        setUsers(res.data);
+        setUserId(res.data?.[0]?._id);
+        setIsLoading(false);
+      })
       .catch((err) => console.error(err));
   }, []);
 
   const handleChange = (value) => {
-    console.log({ value });
     setUserId(value);
+    setUrl("");
   };
 
   useEffect(() => {
     if (userId) {
-      setUrl(`${url}/?id=${userId}`);
+      setUrl(`${redirectUrl}/?id=${userId}`);
     }
   }, [userId]);
 
-  if(!users) return null
+  const showResult = async () => {
+    setOpen(true);
+
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/answeredQuestions/stats`
+    );
+
+    setLoading(false);
+
+    setResults(res?.data);
+  };
+  if (isLoading) return <Loader />;
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        margin: "auto",
+        width: "1300px",
+        marginTop: "22%",
+        color: "white",
+      }}
+    >
+      <h2>
+        Test suallarnı görmək üçün ekranın yuxarı sağ küncündə təqdim edilmiş QR
+        kodu mobil cihazlarınızda oxudun
+      </h2>
       <Select
         onChange={handleChange}
-        style={{ width: "100%" }}
-        options={Array.isArray(users) && Boolean(users?.length) ? users.map((user) => ({
-          value: user._id,
-          label: `${user.name} ${user.surname}`,
-        })): []}
+        style={{ width: "300px" }}
+        value={userId}
+        options={
+          Array.isArray(users) && Boolean(users?.length)
+            ? users.map((user) => ({
+                value: user._id,
+                label: `${user.name} ${user.surname}`,
+              }))
+            : []
+        }
       />
 
-      <Space direction="vertical" align="center">
+      <Space
+        style={{
+          marginTop: "10px",
+          backgroundColor: "white",
+          position: "absolute",
+          top: "20px",
+          right: "100px",
+        }}
+        direction="vertical"
+        align="center"
+      >
         <QRCode value={url || "-"} />
-        {url}
       </Space>
-    </>
+
+      <Button style={{ marginTop: "20px" }} type="primary" onClick={showResult}>
+        Nəticələri göstər
+      </Button>
+
+      <Modal
+        title={<p>Nəticələr</p>}
+        footer={null}
+        loading={loading}
+        open={open}
+        onCancel={() => setOpen(false)}
+      >
+        {results.map((result, index) => (
+          <div key={index}>
+            <p>
+              {Number(index + 1)}.{" "}
+              <strong style={{ fontStyle: "italic" }}>
+                "{result.questionText}"
+              </strong>{" "}
+              sualına toplamda{" "}
+              <strong style={{ fontStyle: "italic" }}>
+                {" "}
+                {result.totalAnswered}
+              </strong>{" "}
+              dəfə cavab verilib. Düzgün cavablarin faiz nisbəti aşağıdakı
+              kimidir.{" "}
+            </p>
+            {Number(result.correctPercent) === 0 ? (
+              <Progress type="circle" percent={100} status="exception" />
+            ) : (
+              <Progress
+                type="circle"
+                percent={Number(result.correctPercent).toFixed(2)}
+              />
+            )}
+          </div>
+        ))}
+      </Modal>
+    </div>
   );
 };
-export default App;
+export default SpeakerSelect;
