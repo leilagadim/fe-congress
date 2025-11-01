@@ -51,11 +51,11 @@ function Questions() {
 
       <hr />
 
-      {questions.map((q, i) => (
+      {questions?.map((q, i) => (
         <div key={i} className="border p-4 my-3 rounded">
           <h2>{q.questionText}</h2>
           <ul>
-            {q.options.map((opt, j) => (
+            {q.options?.map((opt, j) => (
               <li key={j}>{opt}</li>
             ))}
           </ul>

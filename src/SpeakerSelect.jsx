@@ -29,7 +29,7 @@ const App = () => {
       <Select
         onChange={handleChange}
         style={{ width: "100%" }}
-        options={users.map((user) => ({
+        options={users?.map((user) => ({
           value: user._id,
           label: `${user.name} ${user.surname}`,
         }))}

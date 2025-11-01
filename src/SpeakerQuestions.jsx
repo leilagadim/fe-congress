@@ -51,7 +51,7 @@ const SpeakerQuestions = () => {
         );
         setFilteredQuestions(responseQuestions);
         setAnsweredQuestions(
-          responseQuestions.map((question) => ({
+          responseQuestions?.map((question) => ({
             questionId: question._id,
             answer: "",
           }))
@@ -64,7 +64,7 @@ const SpeakerQuestions = () => {
     const value = e.target.value;
 
     const cleaned = value.trim().replace(/\s+/g, " ");
-    const updatedAnswers = answeredQuestions.map((q) =>
+    const updatedAnswers = answeredQuestions?.map((q) =>
       q.questionId === questionId ? { ...q, answer: cleaned } : q
     );
 
@@ -127,7 +127,7 @@ const SpeakerQuestions = () => {
               <Radio.Group
                 style={style}
                 onChange={(e) => onChange(e, item.correctAnswer, item._id)}
-                options={item.options.map((o) => ({
+                options={item.options?.map((o) => ({
                   value: o,
                   label: o,
                 }))}

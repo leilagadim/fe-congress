@@ -45,7 +45,7 @@ function Users() {
 
   // Multi-select handle
   const handleQuestionsChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions).map(
+    const selectedOptions = Array.from(e.target.selectedOptions)?.map(
       (opt) => opt.value
     );
     setNewUser({ ...newUser, questions: selectedOptions });
@@ -78,7 +78,7 @@ function Users() {
           value={selectedItems}
           onChange={setSelectedItems}
           style={{ width: "100%" }}
-          options={questions.map((item) => ({
+          options={questions?.map((item) => ({
             value: item._id,
             label: item.questionText,
           }))}
