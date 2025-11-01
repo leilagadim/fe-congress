@@ -9,7 +9,7 @@ const App = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/users`)
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
       .then((res) => setUsers(res.data))
       .catch((err) => console.error(err));
   }, []);

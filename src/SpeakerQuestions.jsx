@@ -35,14 +35,14 @@ const SpeakerQuestions = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/questions`)
+      .get(`${import.meta.env.VITE_API_URL}/api/questions`)
       .then((res) => setQuestions(res.data))
       .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/users`)
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
       .then((res) => {
         const foundedUser = res?.data?.find((user) => user?._id === userId);
 
@@ -84,12 +84,12 @@ const SpeakerQuestions = () => {
     console.log("test bitir");
     setShowResult(true);
 
-    await axios.post(`${import.meta.env.VITE_BASE_URL}/api/answeredQuestions`, {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/answeredQuestions`, {
       answerQuestions: answeredQuestions,
     });
 
     const res = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/api/answeredQuestions/stats`
+      `${import.meta.env.VITE_API_URL}/api/answeredQuestions/stats`
     );
 
     console.log({res})

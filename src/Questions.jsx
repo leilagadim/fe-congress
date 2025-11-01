@@ -12,7 +12,7 @@ function Questions() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/questions`)
+      .get(`${import.meta.env.VITE_API_URL}/api/questions`)
       .then((res) => setQuestions(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -20,12 +20,12 @@ function Questions() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/api/questions`,
+      `${import.meta.env.VITE_API_URL}/api/questions`,
       newQuestion
     );
     setNewQuestion({ questionText: "", options: [], correctAnswer: "" });
     const res = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/api/questions`
+      `${import.meta.env.VITE_API_URL}/api/questions`
     );
     setQuestions(res.data);
   };

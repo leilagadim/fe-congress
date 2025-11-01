@@ -13,7 +13,7 @@ function Users() {
   // Questions-u backend-dən çəkirik
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/questions`)
+      .get(`${import.meta.env.VITE_API_URL}/api/questions`)
       .then((res) => setQuestions(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -21,7 +21,7 @@ function Users() {
   // Users-u backend-dən çəkirik
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/users`)
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
       .then((res) => setUsers(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -30,12 +30,12 @@ function Users() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, {
         ...newUser,
         questions: selectedItems,
       });
       setNewUser({ name: "", surname: "", questions: [] });
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`);
       setUsers(res.data);
     } catch (err) {
       console.error(err);
