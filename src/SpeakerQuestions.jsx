@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Radio } from "antd";
+import { Button, Input, Modal, Radio } from "antd";
 import axios from "axios";
 import { Avatar, List } from "antd";
 import { useLocation } from "react-router-dom";
@@ -9,7 +9,6 @@ const style = {
   flexDirection: "column",
   gap: 8,
 };
-
 
 const SpeakerQuestions = () => {
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
@@ -93,71 +92,74 @@ const SpeakerQuestions = () => {
   if (loading) return <Loader />;
 
   return (
-    <div
-      style={{
-        width: "100%",
-      }}
-    >
-      <List
-        itemLayout="horizontal"
-        loading={loading && Boolean(filteredQuestions?.length)}
-        dataSource={filteredQuestions}
-        renderItem={(item, index) => (
-          <List.Item
-            style={{
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <List.Item.Meta
+    <Modal title={<p>Suallar</p>} footer={null} closable={false} open={true}>
+      <div
+        style={{
+          width: "100%",
+        }}
+      >
+        <List
+          itemLayout="horizontal"
+          loading={loading && Boolean(filteredQuestions?.length)}
+          dataSource={filteredQuestions}
+          renderItem={(item, index) => (
+            <List.Item
               style={{
-                width: "100%",
-              }}
-              avatar={
-                <Avatar
-                  style={{ backgroundColor: "#f56a00" }}
-                >{`${user?.name?.[0]} ${user?.surname?.[0]}`}</Avatar>
-              }
-              title={<a href="https://ant.design">{item.title}</a>}
-              description={item.questionText}
-            />
-
-            <div style={{ width: "100%" }}>
-              <Radio.Group
-                style={style}
-                onChange={(e) => onChange(e, item.correctAnswer, item._id)}
-                options={item.options.map((o) => ({
-                  value: o,
-                  label: o,
-                }))}
-              />
-            </div>
-
-            <div
-              style={{
-                visibility: isVisible ? "visible" : "hidden",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              {checkQuestionAnswer(item) ? (
-                <p>✅ Düzgün cavab: {item.correctAnswer}</p>
-              ) : (
-                <p>
-                  ❌ Yanlış cavab: Sualın düzgün cavabı {item.correctAnswer} ✅
-                </p>
-              )}
-            </div>
-          </List.Item>
-        )}
-      />
+              <List.Item.Meta
+                style={{
+                  width: "100%",
+                }}
+                avatar={
+                  <Avatar
+                    style={{ backgroundColor: "#f56a00" }}
+                  >{`${user?.name?.[0]} ${user?.surname?.[0]}`}</Avatar>
+                }
+                title={<a href="https://ant.design">{item.title}</a>}
+                description={item.questionText}
+              />
 
-      <Button
-        disabled={loading || answeredQuestions.some((a) => a.answer === "")}
-        type="primary"
-        onClick={showResult}
-      >
-        Testi bitir və nəticəni gör
-      </Button>
-    </div>
+              <div style={{ width: "100%" }}>
+                <Radio.Group
+                  style={style}
+                  onChange={(e) => onChange(e, item.correctAnswer, item._id)}
+                  options={item.options.map((o) => ({
+                    value: o,
+                    label: o,
+                  }))}
+                />
+              </div>
+
+              <div
+                style={{
+                  visibility: isVisible ? "visible" : "hidden",
+                }}
+              >
+                {checkQuestionAnswer(item) ? (
+                  <p>✅ Düzgün cavab: {item.correctAnswer}</p>
+                ) : (
+                  <p>
+                    ❌ Yanlış cavab: Sualın düzgün cavabı {item.correctAnswer}{" "}
+                    ✅
+                  </p>
+                )}
+              </div>
+            </List.Item>
+          )}
+        />
+
+        <Button
+          disabled={loading || answeredQuestions.some((a) => a.answer === "")}
+          type="primary"
+          onClick={showResult}
+        >
+          Testi bitir və nəticəni gör
+        </Button>
+      </div>
+    </Modal>
   );
 };
 export default SpeakerQuestions;
