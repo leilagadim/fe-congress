@@ -11,6 +11,10 @@
   align-items: center; /* dikey ortalama */
   justify-content: center; /* üfüqi ortalama */
 }
+.result-modal{
+  width: 100% !important;
+  height: 100vh;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

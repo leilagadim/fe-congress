@@ -92,7 +92,13 @@ const SpeakerQuestions = () => {
   if (loading) return <Loader />;
 
   return (
-    <Modal title={<p>Suallar</p>} footer={null} closable={false} open={true}>
+    <Modal title={<p>Suallar</p>} footer={  <Button
+          disabled={loading || answeredQuestions.some((a) => a.answer === "")}
+          type="primary"
+          onClick={showResult}
+        >
+          Testi bitir və nəticəni gör
+        </Button>} closable={false} open={true}>
       <div
         style={{
           width: "100%",
@@ -151,13 +157,7 @@ const SpeakerQuestions = () => {
           )}
         />
 
-        <Button
-          disabled={loading || answeredQuestions.some((a) => a.answer === "")}
-          type="primary"
-          onClick={showResult}
-        >
-          Testi bitir və nəticəni gör
-        </Button>
+      
       </div>
     </Modal>
   );

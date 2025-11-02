@@ -60,10 +60,7 @@ const SpeakerSelect = () => {
         color: "white",
       }}
     >
-      <h2>
-        Test suallarnı görmək üçün ekranın yuxarı sağ küncündə təqdim edilmiş QR
-        kodu mobil cihazlarınızda oxudun
-      </h2>
+
       <Select
         onChange={handleChange}
         style={{ width: "300px" }}
@@ -83,13 +80,13 @@ const SpeakerSelect = () => {
           marginTop: "10px",
           backgroundColor: "white",
           position: "absolute",
-          top: "20px",
-          right: "100px",
+          bottom: "8px",
+          left: "41px",
         }}
         direction="vertical"
         align="center"
       >
-        <QRCode value={url || "-"} />
+        <QRCode style={{width:'477px', height:'405px'}} value={url || "-"} />
       </Space>
 
       <Button style={{ marginTop: "20px" }} type="primary" onClick={showResult}>
@@ -98,6 +95,8 @@ const SpeakerSelect = () => {
 
       <Modal
         title={<p>Nəticələr</p>}
+        className="result-modal"
+        style={{width:'100%', height:'100vh'}}
         footer={null}
         loading={loading}
         open={open}
