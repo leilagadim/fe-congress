@@ -19,7 +19,7 @@ import Bet from './Bet';
 
         <Routes>
           <Route path="/bet" element={<Bet />} />
-          <Route path="/" element={<SpeakerSelect />} />
+          <Route path="/" element={<Bet />} />
           <Route path="/users" element={<Users />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/speaker-questions" element={<SpeakerQuestions />} />
