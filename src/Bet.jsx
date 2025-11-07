@@ -24,13 +24,8 @@ const Bet = () => {
   const handleChange = (e) => setDayId(Number(e.target.value));
 
   const pickTeam = (day) => {
-    const count = spinCounts[day] || 0;
 
-    // 🔹 Əgər 2-ci və 3-cü fırlanmadır və day 3-dür → decl1 qalib
-    if ((count === 1 || count === 2) && day === 3) {
-      return TEAMS.find((t) => t.id === "decl1");
-    }
-
+  
     // 🔹 Digər bütün hallarda random qalib
     return TEAMS[cryptoRandomInt(TEAMS.length)];
   };
