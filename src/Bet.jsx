@@ -26,7 +26,6 @@ const Bet = () => {
   const pickTeam = (day) => {
 
   
-    // 🔹 Digər bütün hallarda random qalib
     return TEAMS[cryptoRandomInt(TEAMS.length)];
   };
 
