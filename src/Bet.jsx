@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Select, Button } from "antd";
+import { Button, Input } from "antd";
 import { motion } from "framer-motion";
 
 const TEAMS = [
-  { id: "decl1", label: "Decl 1", color: "#e74c3c" },
-  { id: "decl2", label: "Decl 2", color: "#3498db" },
-  { id: "decl3", label: "Decl 3", color: "#27ae60" },
+  { id: "decl1", label: "1", color: "#e74c3c" },
+  { id: "decl2", label: "2", color: "#3498db" },
+  { id: "decl3", label: "3", color: "#27ae60" },
 ];
 
 function cryptoRandomInt(max) {
@@ -15,23 +15,31 @@ function cryptoRandomInt(max) {
 }
 
 const Bet = () => {
-  const [dayId, setDayId] = useState(null);
+  const [dayId, setDayId] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
+  const [spinCounts, setSpinCounts] = useState({});
 
-  const handleChange = (value) => setDayId(value);
+  const handleChange = (e) => setDayId(Number(e.target.value));
 
   const pickTeam = (day) => {
-    if (day === 3) return TEAMS.find((t) => t.id === "decl1");
-    let candidates = [...TEAMS];
-    if (day === 2 || day === 4)
-      candidates = candidates.filter((t) => t.id !== "decl1");
-    return candidates[cryptoRandomInt(candidates.length)];
+    const count = spinCounts[day] || 0;
+
+    // 🔹 Əgər 2-ci və 3-cü fırlanmadır və day 3-dür → decl1 qalib
+    if ((count === 1 || count === 2) && day === 3) {
+      return TEAMS.find((t) => t.id === "decl1");
+    }
+
+    // 🔹 Digər bütün hallarda random qalib
+    return TEAMS[cryptoRandomInt(TEAMS.length)];
   };
 
   const showResult = () => {
-    if (!dayId) return alert("Zəhmət olmasa əvvəlcə günü seçin.");
+    if (!dayId)
+      return alert(
+        "Zəhmət olmasa əvvəlcə günü daxil edin (məsələn 2, 3 və ya 4)."
+      );
 
     const selected = pickTeam(dayId);
     const index = TEAMS.findIndex((t) => t.id === selected.id);
@@ -45,6 +53,11 @@ const Bet = () => {
     setSpinning(true);
     setWinner(null);
     setRotation(targetRotation);
+
+    setSpinCounts((prev) => ({
+      ...prev,
+      [dayId]: (prev[dayId] || 0) + 1,
+    }));
 
     setTimeout(() => {
       setWinner(selected);
@@ -79,23 +92,23 @@ const Bet = () => {
       </style>
 
       <h2 style={{ color: "#00eaff", fontWeight: 700, fontSize: "2rem" }}>
-        🎡 Çərxi-Fələk Oyunu 🎉
+        🎡 Chance Game 🎉
       </h2>
 
-      <Select
+      <Input
+        placeholder="Please, type a count"
+        type="number"
+        min={2}
+        max={4}
+        value={dayId}
         onChange={handleChange}
-        placeholder="Günü seçin"
         style={{
           width: "250px",
           marginTop: 20,
-          backgroundColor: "#fff",
           borderRadius: "8px",
+          textAlign: "center",
+          fontWeight: 600,
         }}
-        options={[
-          { value: 2, label: "2-ci gün" },
-          { value: 3, label: "3-cü gün" },
-          { value: 4, label: "4-cü gün" },
-        ]}
       />
 
       <Button
@@ -110,10 +123,9 @@ const Bet = () => {
         onClick={showResult}
         disabled={spinning}
       >
-        {spinning ? "Fırlanır..." : "Çərxi fələk!"}
+        {spinning ? "spinning..." : "Spin!"}
       </Button>
 
-      {/* Çərx */}
       <div
         style={{
           position: "relative",
@@ -122,7 +134,6 @@ const Bet = () => {
           marginTop: 50,
         }}
       >
-        {/* Ox */}
         <div
           style={{
             position: "absolute",
@@ -139,7 +150,6 @@ const Bet = () => {
           }}
         ></div>
 
-        {/* Çarx */}
         <motion.div
           animate={{ rotate: rotation }}
           transition={{ duration: 4, ease: "easeOut" }}
@@ -173,7 +183,6 @@ const Bet = () => {
             );
           })}
 
-          {/* Dekorativ mərkəz */}
           <div
             style={{
               position: "absolute",
@@ -191,7 +200,6 @@ const Bet = () => {
         </motion.div>
       </div>
 
-      {/* Qalib */}
       {winner && (
         <div
           style={{
@@ -202,7 +210,7 @@ const Bet = () => {
             textShadow: "0 0 10px #fff, 0 0 20px " + winner.color,
           }}
         >
-          🎉 Qalib komanda: {winner.label} 🎊
+          🎉 Winner: {winner.label} 🎊
         </div>
       )}
     </div>
