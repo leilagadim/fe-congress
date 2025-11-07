@@ -4,6 +4,7 @@
   import SpeakerQuestions from "./SpeakerQuestions";
   import Questions from "./Questions";
   import Users from "./Users";
+import Bet from './Bet';
 
   function App() {
     return (
@@ -17,6 +18,7 @@
         </nav> */}
 
         <Routes>
+          <Route path="/bet" element={<Bet />} />
           <Route path="/" element={<SpeakerSelect />} />
           <Route path="/users" element={<Users />} />
           <Route path="/questions" element={<Questions />} />
